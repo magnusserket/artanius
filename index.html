@@ -19,7 +19,7 @@
         /* 2. VISOR PRINCIPAL */
         .visor { flex: 1; display: flex; flex-direction: column; padding: 5px 25px; justify-content: center; min-height: 0; }
         .foto-wrapper { width: 100%; aspect-ratio: 1 / 1; background: #163632; border-radius: 25px; border: 1px solid rgba(181,130,49,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto 10px; }
-        .foto-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .foto-wrapper img {width: 100%;height: 100%;object-fit: contain; /* Cambia "cover" por "contain" si quieres ver la foto completa sin recortes */background: #0a1f1d; /* Un fondo más oscuro para que lo que sobre de la foto horizontal se vea elegante*/}
         
         /* 3. DETALLES Y BOTÓN WHATSAPP */
         .detalles { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-shrink: 0; }
@@ -31,7 +31,7 @@
         .nav { display: flex; justify-content: center; gap: 30px; padding: 10px 0; color: var(--oro); flex-shrink: 0; }
         
         /* 5. CUADRO 9 FOTOS (GRILLA) */
-        .grilla { background: rgba(0,0,0,0.3); padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-radius: 30px 30px 0 0; flex-shrink: 0; }
+        .grilla {background: rgba(0,0,0,0.3); padding: 15px 15px 40px; /* Agregamos 40px abajo para que el dock no tape las fotos */ display: grid; grid-template-columns: repeat(3, 1fr);gap: 12px; border-radius: 30px 30px 0 0;}
         .item { aspect-ratio: 1/1; background: #1a423e; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 7px; text-align: center; padding: 5px; color: rgba(255,255,255,0.5); text-transform: uppercase; cursor: pointer; overflow: hidden; }
         .item img { width: 100%; height: 100%; object-fit: cover; }
         .item.sel { border: 2px solid var(--oro); background: #235550; color: white; }
@@ -75,7 +75,7 @@
 
     <script>
         // 1. AQUÍ PONES TU INFORMACIÓN REAL
-        const MI_WHATSAPP = "570000000000"; // Pon tu número aquí
+        const MI_WHATSAPP = "573146492017"; // Pon tu número aquí
 
         // 2. AQUÍ PONES TUS PRODUCTOS (Fotos y Precios)
         const productos = [
