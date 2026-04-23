@@ -3,28 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Artanius | Galería Pro</title>
+    <title>Artanius | Catálogo</title>
     <style>
         :root { --v-petroleo: #0F2B28; --oro: #B58231; --oro-osc: #8a6325; --negro-modal: rgba(5, 20, 18, 1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* El -webkit-tap-highlight-color: transparent de arriba quita el rastro azul que viste */
-
         body { background: var(--v-petroleo); color: white; overflow-x: hidden; min-height: 100vh; }
 
+        /* HEADER CON LOGO */
         header { 
-            padding: 20px 10px; text-align: center; position: sticky; top: 0; 
+            padding: 15px 10px; text-align: center; position: sticky; top: 0; 
             background: var(--v-petroleo); z-index: 10; border-bottom: 1px solid rgba(181,130,49,0.2);
         }
-        .logo { font-size: 20px; font-weight: bold; letter-spacing: 4px; color: var(--oro); text-transform: uppercase; margin-bottom: 15px; }
         
-        .cats { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        /* Ajuste del logo */
+        .contenedor-logo { margin-bottom: 15px; }
+        .logo-img { height: 60px; width: auto; object-fit: contain; } /* Ajusta el alto según tu logo */
+        .logo-texto { font-size: 18px; font-weight: bold; letter-spacing: 4px; color: var(--oro); text-transform: uppercase; }
+
+        /* CATEGORÍAS CON ZOOM AL SELECCIONAR */
+        .cats { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 5px; }
         .c-btn { 
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); 
-            color: white; padding: 8px 15px; border-radius: 20px; font-size: 10px; 
+            color: white; padding: 8px 16px; border-radius: 20px; font-size: 10px; 
             text-transform: uppercase; cursor: pointer; outline: none;
+            transition: all 0.3s ease; /* Para que el zoom sea suave */
         }
-        .c-btn.active { background: var(--oro); color: black; font-weight: bold; border: none; }
+        
+        /* EFECTO ZOOM Y COLOR CUANDO ESTÁ ACTIVA */
+        .c-btn.active { 
+            background: var(--oro); 
+            color: black; 
+            font-weight: bold; 
+            border: none;
+            transform: scale(1.15); /* Este es el ZOOM que pediste */
+            box-shadow: 0 4px 15px rgba(181,130,49,0.4);
+            margin: 0 5px; /* Da espacio para que el zoom no choque con los de al lado */
+        }
 
         .galeria-contenedor {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
@@ -33,11 +48,10 @@
         .tarjeta-min {
             aspect-ratio: 1/1; background: #1a423e; border-radius: 10px;
             overflow: hidden; border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; outline: none;
+            cursor: pointer;
         }
         .tarjeta-min img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ZOOM MODAL ACTUALIZADO */
         #modal-zoom {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--negro-modal); z-index: 1000; flex-direction: column;
@@ -46,7 +60,7 @@
         .contenedor-foto-grande {
             width: 100%; max-width: 400px; aspect-ratio: 1/1;
             background: #000; border-radius: 20px; overflow: hidden;
-            border: 1px solid var(--oro); position: relative;
+            border: 1px solid var(--oro);
         }
         #foto-zoom { width: 100%; height: 100%; object-fit: contain; }
 
@@ -58,8 +72,6 @@
             background: #25D366; color: white; padding: 15px 30px; border-radius: 35px;
             text-decoration: none; font-weight: bold; display: inline-block; margin-bottom: 20px;
         }
-
-        /* BOTÓN DE VOLVER */
         .btn-volver {
             background: rgba(255,255,255,0.1); color: white; padding: 10px 20px;
             border-radius: 20px; text-decoration: none; font-size: 12px;
@@ -70,7 +82,10 @@
 <body>
 
     <header>
-        <div class="logo">ARTANIUS</div>
+        <div class="contenedor-logo">
+            <img src="TU_LINK_DEL_LOGO_AQUÍ" alt="Artanius Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-texto').style.display='block';">
+            <div id="logo-texto" class="logo-texto" style="display:none;">ARTANIUS</div>
+        </div>
         <div class="cats">
             <div class="c-btn active" onclick="filtrar('Todas')">Todas</div>
             <div class="c-btn" onclick="filtrar('Artesanías')">Artesanías</div>
@@ -88,7 +103,7 @@
             <p id="zoom-precio"></p>
             <a id="btn-ws-zoom" href="#" target="_blank" class="btn-contacto">PEDIR POR WHATSAPP</a>
             <br>
-            <div class="btn-volver" onclick="cerrarZoom()">← Volver a la galería</div>
+            <div class="btn-volver" onclick="cerrarZoom()">← Volver</div>
         </div>
     </div>
 
@@ -118,30 +133,28 @@
                     const msj = encodeURIComponent(`Hola Artanius! Me interesa: ${p.nombre}`);
                     document.getElementById('btn-ws-zoom').href = `https://wa.me/${MI_WHATSAPP}?text=${msj}`;
                     document.getElementById('modal-zoom').style.display = 'flex';
-                    
-                    // Esto permite usar el botón "atrás" del celular para cerrar la foto
                     window.history.pushState({ modal: true }, "");
                 };
                 grilla.appendChild(div);
             });
         }
 
-        // Detectar el botón "atrás" nativo del celular
-        window.onpopstate = function() {
-            cerrarZoom();
-        };
+        window.onpopstate = function() { cerrarZoom(); };
 
         function filtrar(categoria) {
             document.querySelectorAll('.c-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === categoria);
+                // Compara el texto del botón para poner la clase active
+                if(btn.innerText === categoria) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
             const filtrados = categoria === "Todas" ? productos : productos.filter(p => p.cat === categoria);
             renderizar(filtrados);
         }
 
-        function cerrarZoom() { 
-            document.getElementById('modal-zoom').style.display = 'none'; 
-        }
+        function cerrarZoom() { document.getElementById('modal-zoom').style.display = 'none'; }
 
         renderizar(productos);
     </script>
