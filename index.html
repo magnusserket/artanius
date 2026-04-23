@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Artanius | Catálogo Interactivo</title>
+    <style>
+        :root { --v-petroleo: #0F2B28; --oro: #B58231; --oro-osc: #8a6325; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--v-petroleo); color: white; height: 100vh; display: flex; flex-direction: column; max-width: 420px; margin: 0 auto; overflow: hidden; }
+        
+        /* 1. LOGO Y CATEGORÍAS */
+        header { padding: 20px 10px 5px; text-align: center; flex-shrink: 0; }
+        .logo { font-size: 18px; font-weight: bold; letter-spacing: 4px; margin-bottom: 12px; color: var(--oro); text-transform: uppercase; }
+        .cats { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .c-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 9px; text-transform: uppercase; margin-bottom: 4px; cursor: pointer; }
+        .c-btn.active { background: var(--oro); color: black; font-weight: bold; border: none; }
+
+        /* 2. VISOR PRINCIPAL */
+        .visor { flex: 1; display: flex; flex-direction: column; padding: 5px 25px; justify-content: center; min-height: 0; }
+        .foto-wrapper { width: 100%; aspect-ratio: 1 / 1; background: #163632; border-radius: 25px; border: 1px solid rgba(181,130,49,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto 10px; }
+        .foto-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* 3. DETALLES Y BOTÓN WHATSAPP */
+        .detalles { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-shrink: 0; }
+        .t-prod h2 { color: var(--oro); font-size: 13px; text-transform: uppercase; }
+        .t-prod p { font-size: 18px; font-weight: bold; }
+        .b-ws { background: var(--oro-osc); color: var(--oro); border: 1px solid var(--oro); padding: 10px 14px; border-radius: 10px; text-decoration: none; font-size: 9px; font-weight: bold; text-align: center; line-height: 1.1; }
+
+        /* 4. NAVEGACIÓN */
+        .nav { display: flex; justify-content: center; gap: 30px; padding: 10px 0; color: var(--oro); flex-shrink: 0; }
+        
+        /* 5. CUADRO 9 FOTOS (GRILLA) */
+        .grilla { background: rgba(0,0,0,0.3); padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-radius: 30px 30px 0 0; flex-shrink: 0; }
+        .item { aspect-ratio: 1/1; background: #1a423e; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 7px; text-align: center; padding: 5px; color: rgba(255,255,255,0.5); text-transform: uppercase; cursor: pointer; overflow: hidden; }
+        .item img { width: 100%; height: 100%; object-fit: cover; }
+        .item.sel { border: 2px solid var(--oro); background: #235550; color: white; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">ARTANIUS</div>
+        <div class="cats">
+            <div class="c-btn active">Artesanías</div>
+            <div class="c-btn">Abigail</div>
+            <div class="c-btn">Cuadros</div>
+        </div>
+    </header>
+
+    <div class="visor">
+        <div class="foto-wrapper">
+            <img id="foto-grande" src="https://via.placeholder.com/400?text=Artanius+Cargando" alt="Producto">
+        </div>
+        <div class="detalles">
+            <div class="t-prod">
+                <h2 id="titulo-grande">Selecciona un producto</h2>
+                <p id="precio-grande">$ --.---</p>
+            </div>
+            <a id="link-ws" href="#" target="_blank" class="b-ws">CONSULTAR POR<br>WHATSAPP</a>
+        </div>
+    </div>
+
+    <div class="nav">
+        <span>&#10094;</span>
+        <div style="display:flex;gap:5px;align-items:center;">
+            <div style="width:6px;height:6px;background:var(--oro);border-radius:50%"></div>
+            <div style="width:5px;height:5px;background:rgba(181,130,49,0.3);border-radius:50%"></div>
+        </div>
+        <span>&#10095;</span>
+    </div>
+
+    <div class="grilla" id="contenedor-grilla">
+        </div>
+
+    <script>
+        // 1. AQUÍ PONES TU INFORMACIÓN REAL
+        const MI_WHATSAPP = "570000000000"; // Pon tu número aquí
+
+        // 2. AQUÍ PONES TUS PRODUCTOS (Fotos y Precios)
+        const productos = [
+            { nombre: "foto 1", precio: "$ 15.000", foto: "https://i.postimg.cc/K884Z3jk/IMG-1655.jpg" },
+            { nombre: "FOTO 2", precio: "$ 12.000", foto: "https://i.postimg.cc/8P1zHfhn/IMG-1558.jpg" },
+            { nombre: "FOTO 3", precio: "$ 12.000", foto: "https://i.postimg.cc/q7CJRsTx/IMG-1296.jpg" },
+            { nombre: "FOTO 4", precio: "$ 18.000", foto: "https://i.postimg.cc/C1PmQqRn/Whats-App-Image-2026-04-22-at-11-22-sadasd09-PM.jpg" },
+            { nombre: "FOTO 5", precio: "$ 25.000", foto: "https://i.postimg.cc/2y12RSv6/Whats-App-Image-2026asd-04-22-at-11-22-09-PM.jpg" },
+            { nombre: "FOTO 6", precio: "$ 20.000", foto: "LINK_FOTO_6" },
+            { nombre: "FOTO 7", precio: "$ 10.000", foto: "LINK_FOTO_7" },
+            { nombre: "FOTO 8", precio: "$ 30.000", foto: "LINK_FOTO_8" },
+            { nombre: "FOTO 9", precio: "$ 15.000", foto: "LINK_FOTO_9" }
+        ];
+
+        const grilla = document.getElementById('contenedor-grilla');
+        const fotoG = document.getElementById('foto-grande');
+        const tituloG = document.getElementById('titulo-grande');
+        const precioG = document.getElementById('precio-grande');
+        const linkWS = document.getElementById('link-ws');
+
+        // Función para cambiar el producto mostrado
+        function seleccionar(index) {
+            const p = productos[index];
+            fotoG.src = p.foto;
+            tituloG.innerText = p.nombre;
+            precioG.innerText = p.precio;
+            
+            // Actualiza el mensaje de WhatsApp automáticamente
+            const mensaje = encodeURIComponent(`Hola Artanius! Me interesa el producto: ${p.nombre}`);
+            linkWS.href = `https://wa.me/${MI_WHATSAPP}?text=${mensaje}`;
+
+            // Cambia el borde resaltado en la grilla
+            document.querySelectorAll('.item').forEach((item, i) => {
+                item.classList.toggle('sel', i === index);
+            });
+        }
+
+        // Crear los cuadritos de la grilla automáticamente
+        productos.forEach((p, index) => {
+            const div = document.createElement('div');
+            div.className = `item ${index === 0 ? 'sel' : ''}`;
+            div.innerHTML = `<img src="${p.foto}" alt="${p.nombre}">`;
+            div.onclick = () => seleccionar(index);
+            grilla.appendChild(div);
+        });
+
+        // Cargar el primer producto al abrir la página
+        seleccionar(0);
+    </script>
+
+</body>
+</html>
